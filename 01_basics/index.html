@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>Vanilla JS 基礎学習</title>
+  <style>
+    .active {
+      background-color: lightgreen;
+    }
+    .item {
+      padding: 5px;
+      margin: 5px 0;
+      border: 1px solid #ccc;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Vanilla JS DOM操作練習</h1>
+
+  <button id="myBtn">クリックして色を変えるよ</button>
+
+  <div>
+    <h2>アイテムリスト</h2>
+    <div class="item">アイテム1</div>
+    <div class="item">アイテム2</div>
+    <div class="item">アイテム3</div>
+  </div>
+
+  <div>
+    <h2>フォーム操作</h2>
+    <label>
+      名前：
+      <input type="text" name="username" value="初期値" />
+    </label>
+    <button id="changeNameBtn">名前を変更</button>
+    <p>入力された名前</p>
+    <p id="outputName"></p>
+  </div>
+
+  <script>
+    // DOM取得
+    const btn = document.querySelector('#myBtn');
+    const items = document.querySelectorAll('.item');
+    const input = document.querySelector('input[name="username"]');
+    const changeNameBtn = document.querySelector('#changeNameBtn');
+    const outputName = document.querySelector('#outputName');
+
+    // ボタンの背景色変更 + class操作
+    btn.addEventListener('click', () => {
+      console.log(this);
+      btn.classList.toggle('active');
+      btn.style.backgroundColor = btn.classList.contains('active') ? 'lightblue' : '';
+    });
+
+    // アイテムクリック時にテキストを変更
+    items.forEach(item => {
+      item.addEventListener('click', () => {
+        item.textContent = 'クリックされました！';
+      });
+    });
+
+    // 名前を変更するボタン
+    changeNameBtn.addEventListener('click', () => {
+      const newName = input.value;
+
+      outputName.textContent = newName;
+      alert('名前が変更されました: ' + newName);
+    });
+  </script>
+</body>
+</html>
