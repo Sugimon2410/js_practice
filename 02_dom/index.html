@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>Vanilla JS 拡張サンプル</title>
+  <style>
+    .active {
+      background-color: lightgreen;
+    }
+    .item {
+      padding: 5px;
+      margin: 5px 0;
+      border: 1px solid #ccc;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Vanilla JS DOM操作 拡張練習</h1>
+
+  <!-- 色変更ボタン -->
+  <button id="myBtn">クリックして色変化</button>
+
+  <!-- アイテムリスト -->
+  <div>
+    <h2>アイテムリスト</h2>
+    <div id="itemContainer">
+      <div class="item">アイテム1</div>
+      <div class="item">アイテム2</div>
+      <div class="item">アイテム3</div>
+    </div>
+
+    <input type="text" id="newItemInput" placeholder="新しいアイテムを入力">
+    <button id="addItemBtn">追加</button>
+  </div>
+
+  <!-- 名前フォーム -->
+  <div>
+    <h2>フォーム操作</h2>
+    <label>
+      名前：
+      <input type="text" name="username" value="初期値" />
+    </label>
+    <p>入力された名前</p>
+    <p id="outputName"></p>
+  </div>
+
+  <script>
+    // --- 色を切り替えるボタン ---
+    const btn = document.querySelector('#myBtn');
+    btn.addEventListener('click', () => {
+      btn.classList.toggle('active');
+      btn.style.backgroundColor = btn.classList.contains('active') ? 'lightblue' : '';
+    });
+
+    // --- アイテムクリックでテキスト変更 ---
+    const setupItemClick = (element) => {
+      element.addEventListener('click', () => {
+        element.textContent = 'クリックされました！';
+      });
+    };
+
+    const items = document.querySelectorAll('.item');
+    items.forEach(setupItemClick);
+
+    // --- アイテム追加機能 ---
+    const itemContainer = document.querySelector('#itemContainer');
+    const newItemInput = document.querySelector('#newItemInput');
+    const addItemBtn = document.querySelector('#addItemBtn');
+
+    addItemBtn.addEventListener('click', () => {
+      const text = newItemInput.value.trim();
+      if (!text) return;
+
+      const newItem = document.createElement('div');
+      newItem.className = 'item';
+      newItem.textContent = text;
+      setupItemClick(newItem); // 動的にイベント付与
+
+      itemContainer.appendChild(newItem);
+      newItemInput.value = '';
+    });
+
+    // --- 名前リアルタイム反映 ---
+    const input = document.querySelector('input[name="username"]');
+    const outputName = document.querySelector('#outputName');
+
+    input.addEventListener('input', () => {
+      outputName.textContent = input.value;
+    });
+  </script>
+</body>
+</html>
