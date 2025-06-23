@@ -2,10 +2,10 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <title>Vanilla JS 拡張サンプル</title>
+  <title>Vanilla JS 総合サンプル</title>
   <style>
     .active {
-      background-color: lightgreen;
+      background-color: lightblue;
     }
     .item {
       padding: 5px;
@@ -13,12 +13,40 @@
       border: 1px solid #ccc;
       cursor: pointer;
     }
+
+    /* タブ切り替え用 */
+    .tab-buttons button {
+      margin-right: 5px;
+    }
+    .tab-content {
+      display: none;
+      margin-top: 10px;
+    }
+    .tab-content.active {
+      display: block;
+    }
+
+    /* アコーディオン */
+    .accordion-header {
+      background: #eee;
+      padding: 8px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    .accordion-body {
+      display: none;
+      padding: 10px;
+      border: 1px solid #ccc;
+    }
+    .accordion-body.active {
+      display: block;
+    }
   </style>
 </head>
 <body>
-  <h1>Vanilla JS DOM操作 拡張練習</h1>
+  <h1>Vanilla JS 総合操作</h1>
 
-  <!-- 色変更ボタン -->
+  <!-- 色切り替えボタン -->
   <button id="myBtn">クリックして色変化</button>
 
   <!-- アイテムリスト -->
@@ -29,12 +57,11 @@
       <div class="item">アイテム2</div>
       <div class="item">アイテム3</div>
     </div>
-
     <input type="text" id="newItemInput" placeholder="新しいアイテムを入力">
     <button id="addItemBtn">追加</button>
   </div>
 
-  <!-- 名前フォーム -->
+  <!-- フォーム入力 -->
   <div>
     <h2>フォーム操作</h2>
     <label>
@@ -45,49 +72,106 @@
     <p id="outputName"></p>
   </div>
 
-  <script>
-    // --- 色を切り替えるボタン ---
-    const btn = document.querySelector('#myBtn');
-    btn.addEventListener('click', () => {
-      btn.classList.toggle('active');
-      btn.style.backgroundColor = btn.classList.contains('active') ? 'lightblue' : '';
-    });
+  <!-- タブ切り替え -->
+  <div>
+    <h2>タブ切り替え</h2>
+    <div class="tab-buttons">
+      <button data-tab="tab1">タブ1</button>
+      <button data-tab="tab2">タブ2</button>
+    </div>
+    <div id="tab1" class="tab-content active">タブ1の内容です。</div>
+    <div id="tab2" class="tab-content">タブ2の内容です。</div>
+  </div>
 
-    // --- アイテムクリックでテキスト変更 ---
+  <!-- アコーディオン -->
+  <div>
+    <h2>アコーディオン</h2>
+    <div class="accordion">
+      <div class="accordion-header">クリックして開閉</div>
+      <div class="accordion-body">ここがアコーディオンの内容です。</div>
+    </div>
+  </div>
+
+  <script>
+    const init = () => {
+      setupColorToggle();
+      setupInitialItemClicks();
+      setupAddItem();
+      setupNameInput();
+      setupTabs();
+      setupAccordion();
+    };
+
+    const setupColorToggle = () => {
+      const btn = document.querySelector('#myBtn');
+      btn.addEventListener('click', () => {
+        btn.classList.toggle('active');
+      });
+    };
+
     const setupItemClick = (element) => {
       element.addEventListener('click', () => {
         element.textContent = 'クリックされました！';
       });
     };
 
-    const items = document.querySelectorAll('.item');
-    items.forEach(setupItemClick);
+    const setupInitialItemClicks = () => {
+      const items = document.querySelectorAll('.item');
+      items.forEach(setupItemClick);
+    };
 
-    // --- アイテム追加機能 ---
-    const itemContainer = document.querySelector('#itemContainer');
-    const newItemInput = document.querySelector('#newItemInput');
-    const addItemBtn = document.querySelector('#addItemBtn');
+    const setupAddItem = () => {
+      const itemContainer = document.querySelector('#itemContainer');
+      const newItemInput = document.querySelector('#newItemInput');
+      const addItemBtn = document.querySelector('#addItemBtn');
 
-    addItemBtn.addEventListener('click', () => {
-      const text = newItemInput.value.trim();
-      if (!text) return;
+      addItemBtn.addEventListener('click', () => {
+        const text = newItemInput.value.trim();
+        if (!text) return;
 
-      const newItem = document.createElement('div');
-      newItem.className = 'item';
-      newItem.textContent = text;
-      setupItemClick(newItem); // 動的にイベント付与
+        const newItem = document.createElement('div');
+        newItem.className = 'item';
+        newItem.textContent = text;
+        setupItemClick(newItem);
 
-      itemContainer.appendChild(newItem);
-      newItemInput.value = '';
-    });
+        itemContainer.appendChild(newItem);
+        newItemInput.value = '';
+      });
+    };
 
-    // --- 名前リアルタイム反映 ---
-    const input = document.querySelector('input[name="username"]');
-    const outputName = document.querySelector('#outputName');
+    const setupNameInput = () => {
+      const input = document.querySelector('input[name="username"]');
+      const outputName = document.querySelector('#outputName');
 
-    input.addEventListener('input', () => {
-      outputName.textContent = input.value;
-    });
+      input.addEventListener('input', () => {
+        outputName.textContent = input.value;
+      });
+    };
+
+    const setupTabs = () => {
+      const tabButtons = document.querySelectorAll('.tab-buttons button');
+      const tabContents = document.querySelectorAll('.tab-content');
+
+      tabButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const targetId = btn.getAttribute('data-tab');
+
+          tabContents.forEach(c => c.classList.remove('active'));
+          document.getElementById(targetId).classList.add('active');
+        });
+      });
+    };
+
+    const setupAccordion = () => {
+      const header = document.querySelector('.accordion-header');
+      const body = document.querySelector('.accordion-body');
+
+      header.addEventListener('click', () => {
+        body.classList.toggle('active');
+      });
+    };
+
+    init();
   </script>
 </body>
 </html>
