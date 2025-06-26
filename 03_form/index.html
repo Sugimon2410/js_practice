@@ -1,108 +1,137 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <title>ES6 バリデーション付フォーム</title>
+  <meta charset="UTF-8">
+  <title>複雑なバリデーションフォーム</title>
   <style>
-    body {
-      font-family: sans-serif;
-      padding: 20px;
-    }
-
-    form {
-      max-width: 400px;
-    }
-
-    label {
-      display: block;
-      margin-top: 10px;
-    }
-
-    input {
-      width: 100%;
-      padding: 6px;
-      margin-top: 4px;
-    }
-
-    .error {
-      color: red;
-      font-size: 0.9em;
-      margin-top: 4px;
-    }
-
-    .success {
-      color: green;
-      font-weight: bold;
-      margin-top: 10px;
-    }
+    body { font-family: sans-serif; padding: 20px; }
+    label { display: block; margin-top: 10px; }
+    input, select { width: 100%; padding: 6px; margin-top: 4px; }
+    .error { color: red; font-size: 0.9em; margin-top: 4px; }
+    .success { color: green; font-weight: bold; margin-top: 10px; }
   </style>
 </head>
 <body>
-  <h1>バリデーション付きフォーム</h1>
+  <h1>会員登録フォーム</h1>
 
-  <form id="myForm" novalidate>
+  <form id="signupForm" novalidate>
     <label>
-      名前（必須）:
-      <input type="text" name="name" />
+      名前（必須・2文字以上）:
+      <input type="text" name="name">
       <div class="error" id="nameError"></div>
     </label>
 
     <label>
-      メール（必須・形式）:
-      <input type="email" name="email" />
+      メールアドレス（必須・形式チェック）:
+      <input type="email" name="email">
       <div class="error" id="emailError"></div>
     </label>
 
     <label>
-      年齢（任意・数値）:
-      <input type="text" name="age" />
+      年齢（任意・18歳以上・半角数字）:
+      <input type="text" name="age">
       <div class="error" id="ageError"></div>
     </label>
 
-    <button type="submit">送信</button>
+    <label>
+      パスワード（必須・8文字以上・英数字混在）:
+      <input type="password" name="password">
+      <div class="error" id="passwordError"></div>
+    </label>
+
+    <label>
+      性別（必須）:
+      <input type="radio" name="gender" value="male"> 男性
+      <input type="radio" name="gender" value="female"> 女性
+      <div class="error" id="genderError"></div>
+    </label>
+
+    <label>
+      <input type="checkbox" name="terms"> 利用規約に同意する
+      <div class="error" id="termsError"></div>
+    </label>
+
+    <button type="submit">登録する</button>
     <div class="success" id="successMessage"></div>
   </form>
 
   <script>
-    const form = document.querySelector('#myForm');
-    const nameInput = form.elements['name'];
-    const emailInput = form.elements['email'];
-    const ageInput = form.elements['age'];
+    const form = document.querySelector('#signupForm');
 
-    const nameError = document.querySelector('#nameError');
-    const emailError = document.querySelector('#emailError');
-    const ageError = document.querySelector('#ageError');
-    const successMessage = document.querySelector('#successMessage');
+    const showError = (id, message) => {
+      document.querySelector(`#${id}`).textContent = message;
+    };
+
+    const clearErrors = () => {
+      document.querySelectorAll('.error').forEach(el => el.textContent = '');
+      document.querySelector('#successMessage').textContent = '';
+    };
 
     const validateEmail = (email) =>
       /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
+    const validatePassword = (pw) =>
+      /^(?=.*[a-zA-Z])(?=.*\d).{8,}$/.test(pw);
+
     const validateForm = () => {
       let isValid = true;
-      nameError.textContent = '';
-      emailError.textContent = '';
-      ageError.textContent = '';
-      successMessage.textContent = '';
+      clearErrors();
 
-      const name = nameInput.value.trim();
-      const email = emailInput.value.trim();
-      const age = ageInput.value.trim();
+      const name = form.elements['name'].value.trim();
+      const email = form.elements['email'].value.trim();
+      const age = form.elements['age'].value.trim();
+      const password = form.elements['password'].value.trim();
+      const gender = form.querySelector('input[name="gender"]:checked');
+      const terms = form.elements['terms'].checked;
 
+      // 名前
       if (!name) {
-        nameError.textContent = '名前は必須です。';
+        showError('nameError', '名前は必須です。');
+        isValid = false;
+      } else if (name.length < 2) {
+        showError('nameError', '名前は2文字以上で入力してください。');
         isValid = false;
       }
 
+      // メール
       if (!email) {
-        emailError.textContent = 'メールアドレスは必須です。';
+        showError('emailError', 'メールアドレスは必須です。');
         isValid = false;
       } else if (!validateEmail(email)) {
-        emailError.textContent = '正しいメール形式で入力してください。';
+        showError('emailError', 'メールアドレスの形式が正しくありません。');
         isValid = false;
       }
 
-      if (age && isNaN(Number(age))) {
-        ageError.textContent = '年齢は数値で入力してください。';
+      // 年齢
+      if (age) {
+        const ageNum = Number(age);
+        if (isNaN(ageNum)) {
+          showError('ageError', '年齢は半角数字で入力してください。');
+          isValid = false;
+        } else if (ageNum < 18) {
+          showError('ageError', '18歳以上のみ登録可能です。');
+          isValid = false;
+        }
+      }
+
+      // パスワード
+      if (!password) {
+        showError('passwordError', 'パスワードは必須です。');
+        isValid = false;
+      } else if (!validatePassword(password)) {
+        showError('passwordError', '8文字以上で英字と数字を含めてください。');
+        isValid = false;
+      }
+
+      // 性別
+      if (!gender) {
+        showError('genderError', '性別を選択してください。');
+        isValid = false;
+      }
+
+      // 規約同意
+      if (!terms) {
+        showError('termsError', '利用規約への同意が必要です。');
         isValid = false;
       }
 
@@ -111,9 +140,8 @@
 
     form.addEventListener('submit', (e) => {
       e.preventDefault();
-
       if (validateForm()) {
-        successMessage.textContent = `送信されました！ようこそ、${nameInput.value.trim()}さん。`;
+        document.querySelector('#successMessage').textContent = '登録が完了しました！';
         form.reset();
       }
     });
