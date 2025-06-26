@@ -1,0 +1,5 @@
+[
+  { "id": 1, "name": "山田太郎", "email": "taro@example.com" },
+  { "id": 2, "name": "佐藤花子", "email": "hanako@example.com" },
+  { "id": 3, "name": "鈴木次郎", "email": "jiro@example.com" }
+]
