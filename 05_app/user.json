@@ -1,0 +1,4 @@
+[
+  { "name": "田中太郎", "age": 30, "gender": "男性", "email": "taro@example.com" },
+  { "name": "山田花子", "age": 25, "gender": "女性", "email": "hanako@example.com" }
+]

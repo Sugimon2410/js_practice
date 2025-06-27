@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Vanilla JS 集大成アプリ</title>
+  <style>
+    .tab { display: inline-block; padding: 10px; cursor: pointer; background: #ddd; margin-right: 5px; }
+    .tab.active { background: #aaa; color: #fff; }
+    .tab-content { display: none; margin-top: 20px; }
+    .tab-content.active { display: block; }
+    ul { list-style: none; padding: 0; }
+    li { border-bottom: 1px solid #ccc; padding: 5px 0; }
+  </style>
+</head>
+<body>
+
+  <h1>ユーザー管理サンプル</h1>
+
+  <div id="tabs">
+    <div class="tab active" data-tab="list">ユーザー一覧</div>
+    <div class="tab" data-tab="add">ユーザー追加</div>
+    <div class="tab" data-tab="guide">使い方ガイド</div>
+  </div>
+
+  <div id="tabContents">
+    <div class="tab-content active" id="list">
+      <h2>ユーザー一覧（fetchで読み込み）</h2>
+      <ul id="userList"></ul>
+    </div>
+
+    <div class="tab-content" id="add">
+      <h2>ユーザー追加フォーム</h2>
+      <form id="userForm">
+        <label>氏名：<input type="text" name="name" required></label><br>
+        <label>年齢：<input type="number" name="age" required></label><br>
+        <label>性別：
+          <select name="gender" required>
+            <option value="">選択してください</option>
+            <option>男性</option>
+            <option>女性</option>
+          </select>
+        </label><br>
+        <label>メールアドレス：<input type="email" name="email" required></label><br>
+        <button type="submit">追加</button>
+      </form>
+    </div>
+
+    <div class="tab-content" id="guide">
+      <h2>使い方ガイド</h2>
+      <p>タブを切り替えてユーザー一覧を見たり、新規追加したりできます。</p>
+    </div>
+  </div>
+
+  <script src="app.js" type="module"></script>
+</body>
+</html>
